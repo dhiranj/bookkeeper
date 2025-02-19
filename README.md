@@ -29,7 +29,7 @@ cd ../frontend && npm install
 ```
 
 ## 3️⃣ Configure Environment Variables
-# Create a .env file in both backend/ and frontend/ directories.
+### Create a .env file in both backend/ and frontend/ directories.
 ```bash
 DATABASE_URL=postgres://user:password@postgres:5432/library
 MONGO_URL=mongodb://mongodb:27017/library
@@ -40,4 +40,59 @@ NEXT_PUBLIC_GRAPHQL_API=http://localhost:4000/graphql
 ## 4️⃣ Run the Application
 ```bash
 docker-compose up --build
+```
+
+### Run Database Migrations & Populate Db
+```bash
+# Get the backend container name
+docker ps  # Find the container name for backend-app
+
+# Access the running backend container
+docker exec -it backend-app sh
+
+# Inside the container, run:
+npx sequelize-cli db:migrate  # Apply migrations
+node populateDB.js  # Populate the database
+
+# Exit the container
+exit
+```
+
+## 🔥 API & GraphQL Playground
+```bash
+http://localhost:4000/graphql
+```
+
+## 📡 GraphQL API Example Queries:
+### 🔎 Fetch Books with Authors
+```bash
+query GetBooks {
+  books {
+    id
+    title
+    author {
+      name
+    }
+  }
+}
+```
+
+### ➕ Add a New Author
+```bash
+mutation AddAuthor {
+  addAuthor(name: "New Author", biography: "Author bio", born_date: "1980-01-01") {
+    id
+    name
+  }
+}
+```
+
+### 📝 Update a Book
+```bash
+mutation UpdateBook {
+  updateBook(id: "1", title: "Updated Title", description: "New description") {
+    id
+    title
+  }
+}
 ```
